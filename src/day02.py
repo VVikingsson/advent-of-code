@@ -1,3 +1,7 @@
+# This code is one big mess. I 8888888888888 ,m m m m m m m m m m m m m m m m 
+# sorry my cat walked across the keyboard.
+# This code is one big mess. I hereby promise myself not to create such a monstrosity again.
+
 def solution_one():
     with open("inputs/day02.txt", "r") as file:
         contents = file.readlines()
@@ -6,7 +10,6 @@ def solution_one():
 
     for line in contents:
         nums = line.split(" ")
-        print(nums)
         if all([int(nums[i]) + 1 <= int(nums[i + 1]) <= int(nums[i]) + 3 for i in range(len(nums) - 1)]):
             safe_reports += 1
         elif all([int(nums[i]) - 1 >= int(nums[i + 1]) >= int(nums[i]) - 3 for i in range(len(nums) - 1)]):
@@ -30,8 +33,8 @@ def is_safe(nums, i, j, direction="undecided"):
         return direction
 
 def solution_two():
-    with open("test.txt", "r") as file:
-    #with open("inputs/day02.txt", "r") as file:
+    #with open("test.txt", "r") as file:
+    with open("inputs/day02.txt", "r") as file:
         contents = file.readlines()
     
     safe_reports = 0
@@ -39,56 +42,73 @@ def solution_two():
     for line in contents:
         nums = [int(n) for n in line.split()]
 
-        safe = True
-        tolerant = True
-        direction = "undecided"
-        directions = ["undecided", "ascending", "descending"]
-        i = 0
-
-        while safe and direction != None and i < len(nums) - 1:
-            if is_safe(nums, i, i+1, direction):
-                if i == 0:
-                    direction = is_safe(nums, i, i+1, direction)
-            elif tolerant:
-                tolerant = False
-                if i >= 2:
-                    if len(nums) - 2 == i:
-                        pass
-                    elif is_safe(nums, i-1, i+1, direction) and is_safe(nums, i+1, i+2, direction):
-                        pass
-                    elif is_safe(nums, i, i+2, direction) and is_safe(nums, i+2, i+3, direction):
-                        i += 1
-                    else:
-                        safe = False
-                
-                elif i == 1:
-                    if is_safe(nums, i-1, i+1, "undecided"):
-                        direction = is_safe(nums, i-1, i+1, "undecided")
-                        if is_safe(nums, i+1, i+2, direction):
-                            i += 1
-                        elif is_safe(nums, i, i+2, "undecided"):
-                            direction = is_safe(nums, i, i+2, "undecided")
-                            i += 1
-                        
-                        
-                    elif is_safe(nums, i, i+2, "undecided"):
-                        direction = is_safe(nums, i, i+2, "undecided")
-                        i += 1
-                    else:
-                        safe = False
-                
-                elif i == 0:
-                    if is_safe(nums, i+1, i+2, "undecided"):
-                        direction = is_safe(nums, i+1, i+2, "undecided")
-                        i += 1
-                    else:
-                        safe = False
-            else:
-                safe = False
-            i += 1
-                    
-        if safe:
+        if all([nums[i] + 1 <= nums[i + 1] <= nums[i] + 3 for i in range(len(nums) - 1)]):
             safe_reports += 1
+        elif all([nums[i] - 1 >= nums[i + 1] >= nums[i] - 3 for i in range(len(nums) - 1)]):
+            safe_reports += 1
+
+        else:
+            direction = "undecided"
+            tolerant = True
+            skip_i = []
+            for i in range(len(nums) - 1):
+                if i in skip_i:
+                    continue
+
+                elif is_safe(nums, i, i+1, direction):
+                    continue
+                    
+                elif tolerant:
+                    tolerant = False
+
+                    if i == 0:
+                        # try skipping i=1
+                        if is_safe(nums, i, i+2, direction):
+                            direction = is_safe(nums, i, i+2, direction)
+                            if is_safe(nums, i+2, i+3):
+                                skip_i.append(i+1)
+                                skip_i.append(i+2)
+                            # restart from i=1
+                            else:
+                                direction = "undecided"
+                                continue
+                    elif i == 1:
+                        # try skipping i=0
+                        if is_safe(nums, i, i+1, "undecided"):
+                            direction = is_safe(nums,i,i+1, "undecided")
+                        # try skipping i=1
+                        elif is_safe(nums, i-1, i+1, "undecided"):
+                            direction = is_safe(nums, i-1, i+1, "undecided")
+                        # try skipping i=2
+                        elif is_safe(nums, i, i+2, direction):
+                            skip_i.append(i+1)
+
+                    elif i == len(nums) - 2:
+                        continue
+
+                    elif i == len(nums) - 3:
+                        # try skipping i
+                        if is_safe(nums, i-1, i+1, direction):
+                            continue
+                        # try skipping i+1
+                        elif is_safe(nums, i, i+2, direction):
+                            skip_i.append(i+1)
+
+                    else:
+                        # try skipping i
+                        if is_safe(nums, i-1, i+1, direction):
+                            continue
+                        # try skipping i+1
+                        elif is_safe(nums, i, i+2, direction):
+                            skip_i.append(i+1)
+
+                else:
+                    break
+
+            else:
+                safe_reports += 1
+            
+        
 
 
            
@@ -102,3 +122,4 @@ def solution_two():
 
 if __name__ == "__main__":
     print(solution_two())
+    print(solution_one())
