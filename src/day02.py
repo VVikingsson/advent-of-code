@@ -14,37 +14,24 @@ def solution_one():
     return safe_reports
 
 def is_safe(nums, i, j, direction="undecided"):
-    match direction:
-        case "ascending":
-            return nums[i] < nums[j] <= nums[i] + 3
-        case "descending":
-            return nums[i] > nums[j] >= nums[i] - 3
-        case "undecided":
-            if is_safe(nums, i, j, "ascending"):
-                return "ascending"
-            elif is_safe(nums, i, j, "descending"):
-                return "descending"
-
-    
-def dampen_problem(nums, i, direction):
-    if i > 2:
-        if direction := is_safe(nums, i - 1, i+1, direction):
-            return 0
-        elif is_safe(nums, i, i+2, direction):
-            return 1
-    elif i == 0:
-        if direction := is_safe(nums, i, i+2) == is_safe(nums, i+2, i+3):
-            if direction in ["descending", "ascending"]:
-                return 1, direction
-        elif direction := is_safe(nums, i+1, i+3) == is_safe(nums, i+3, i+4):
-            if direction in ["descending", "ascending"]:
-                return 2, direction
-            
-        
-
+    if j < len(nums):
+        match direction:
+            case "ascending":
+                return nums[i] < nums[j] <= nums[i] + 3
+            case "descending":
+                return nums[i] > nums[j] >= nums[i] - 3
+            case "undecided":
+                if is_safe(nums, i, j, "ascending"):
+                    return "ascending"
+                elif is_safe(nums, i, j, "descending"):
+                    return "descending"
+                else:
+                    direction = None
+        return direction
 
 def solution_two():
-    with open("inputs/day02.txt", "r") as file:
+    with open("test.txt", "r") as file:
+    #with open("inputs/day02.txt", "r") as file:
         contents = file.readlines()
     
     safe_reports = 0
@@ -55,28 +42,49 @@ def solution_two():
         safe = True
         tolerant = True
         direction = "undecided"
+        directions = ["undecided", "ascending", "descending"]
         i = 0
 
-        while safe and i < len(nums) - 1:
-
+        while safe and direction != None and i < len(nums) - 1:
             if is_safe(nums, i, i+1, direction):
-                direction = "ascending"
-
-            elif is_safe(nums, i, i+1, direction):
-                direction = "descending"
-
+                if i == 0:
+                    direction = is_safe(nums, i, i+1, direction)
             elif tolerant:
-                if instruction := dampen_problem(nums, i, direction):
-                    i += instruction[0]
-                    if len(instruction) == 2:
-                        direction = instruction[1]
-
                 tolerant = False
-
-
-            else: 
+                if i >= 2:
+                    if len(nums) - 2 == i:
+                        pass
+                    elif is_safe(nums, i-1, i+1, direction) and is_safe(nums, i+1, i+2, direction):
+                        pass
+                    elif is_safe(nums, i, i+2, direction) and is_safe(nums, i+2, i+3, direction):
+                        i += 1
+                    else:
+                        safe = False
+                
+                elif i == 1:
+                    if is_safe(nums, i-1, i+1, "undecided"):
+                        direction = is_safe(nums, i-1, i+1, "undecided")
+                        if is_safe(nums, i+1, i+2, direction):
+                            i += 1
+                        elif is_safe(nums, i, i+2, "undecided"):
+                            direction = is_safe(nums, i, i+2, "undecided")
+                            i += 1
+                        
+                        
+                    elif is_safe(nums, i, i+2, "undecided"):
+                        direction = is_safe(nums, i, i+2, "undecided")
+                        i += 1
+                    else:
+                        safe = False
+                
+                elif i == 0:
+                    if is_safe(nums, i+1, i+2, "undecided"):
+                        direction = is_safe(nums, i+1, i+2, "undecided")
+                        i += 1
+                    else:
+                        safe = False
+            else:
                 safe = False
-
             i += 1
                     
         if safe:
