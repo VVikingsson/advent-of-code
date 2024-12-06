@@ -26,9 +26,8 @@ class Guard {
         State currentState = new State(dir, i, j);
         if (isTrappable(currentState)) {
             obstructions++;
+            System.out.println("Found possible trap by turning " + getTurnedDirection(dir) + " at " + i + " " + j);
         }
-
-        states.add(currentState);
 
         map.get(i)[j] = 'X';
 
@@ -42,11 +41,17 @@ class Guard {
     }
 
     public void walkUp() {
-        System.out.println("Walk up" + " i" + i + " j" + j);
+        if (map.get(i)[j] == '-') {
+            map.get(i)[j] = '+';
+        }
+        else {
+            map.get(i)[j] = '|';
+        }
+        System.out.println("Walk up" + " i" + i + " j" + j + "    wrote " + map.get(i)[j]);
         if (i - 1 < 0) {
             done = true;
         }
-        else if (map.get(i-1)[j] == '.' || map.get(i-1)[j] == 'X') {
+        else if (map.get(i-1)[j] == '.' || map.get(i-1)[j] == '+' || map.get(i-1)[j] == '|' || map.get(i-1)[j] == '-') {
             i = i - 1;
         }
         else {
@@ -54,11 +59,17 @@ class Guard {
         }
     }
     public void walkDown() {
-        System.out.println("Walk down" + " i" + i + " j" + j);
+        if (map.get(i)[j] == '-') {
+            map.get(i)[j] = '+';
+        }
+        else {
+            map.get(i)[j] = '|';
+        }
+        System.out.println("Walk down" + " i" + i + " j" + j + "    wrote " + map.get(i)[j]);
         if (i + 1 >= map.size()) {
             done = true;
         }
-        else if (map.get(i+1)[j] == '.' || map.get(i+1)[j] == 'X') {
+        else if (map.get(i-1)[j] == '.' || map.get(i+1)[j] == '+' || map.get(i+1)[j] == '|' || map.get(i+1)[j] == '-') {
             i = i + 1;
         }
         else {
@@ -66,11 +77,17 @@ class Guard {
         }
     }
     public void walkLeft() {
-        System.out.println("Walk Left" + "i" + i + "j" + j);
+        if (map.get(i)[j] == '|') {
+            map.get(i)[j] = '+';
+        }
+        else {
+            map.get(i)[j] = '-';
+        }
+        System.out.println("Walk Left" + "i" + i + "j" + j + "    wrote " + map.get(i)[j]);
         if (j - 1 < 0) {
             done = true;
         }
-        else if (map.get(i)[j-1] == '.' || map.get(i)[j-1] == 'X') {
+        else if (map.get(i)[j-1] == '.' || map.get(i)[j-1] == '+' || map.get(i)[j-1] == '|' || map.get(i)[j-1] == '-') {
             j = j - 1;
         }
         else {
@@ -78,11 +95,17 @@ class Guard {
         }
     }
     public void walkRight() {
-        System.out.println("Walk right" + " i" + i + " j" + j);
+        if (map.get(i)[j] == '|') {
+            map.get(i)[j] = '+';
+        }
+        else {
+            map.get(i)[j] = '-';
+        }
+        System.out.println("Walk right" + " i" + i + " j" + j + "    wrote " + map.get(i)[j]);
         if (j + 1 >= map.get(i).length) {
             done = true;
         }
-        else if (map.get(i)[j+1] == '.' || map.get(i)[j+1] == 'X') {
+        else if (map.get(i)[j+1] == '.' || map.get(i)[j+1] == '+' || map.get(i)[j+1] == '|' || map.get(i)[j+1] == '-') {
             j = j + 1;
         }
         else {
@@ -112,7 +135,7 @@ class Guard {
         int count = 0;
         for (char[] arr : map) {
             for (char c : arr) {
-                if (c == 'X') {
+                if (c == 'X' || c == '+' || c == '-' || c == '|') {
                     count ++;
                 }
             }
@@ -121,18 +144,77 @@ class Guard {
     }
     private boolean hasState(String dir, int[] location) {
         for (State s : states) {
-            System.out.println(dir + " " + location[0] + " " + location[1] + " | " + s.getDirection() + " " + s.getLocation()[0] + " " + s.getLocation()[1]);
             if (s.getDirection().equals(dir) && Arrays.equals(s.getLocation(), location)) {
+                System.out.println(dir + " " + location[0] + " " + location[1] + "  |  existing state: " + s.getDirection() + " " + s.getLocation()[0] + " " + s.getLocation()[1]);
+
                 return true;
             }
         }
         return false;
     }
     private boolean isTrappable(State state) {
-        for (int i = state.getLocation()[0]; i >= 0; i--) {
-            if (hasState(dir, new int[]{i, state.getLocation()[1]})) {
-                return true;
+        switch (dir) {
+            case "left": {
+                for (int i = this.i; i >= 0; i--) {
+                    switch (map.get(i)[j]) {
+                        case ('|') -> {
+                            return true;
+                        }
+                        case ('+') -> {
+                            return true;
+                        }
+                        case ('#') -> {
+                            break;
+                        }
+                    }
+                }
             }
+            case "right": {
+                for (int i = this.i; i < map.size(); i++) {
+                    switch (map.get(i)[j]) {
+                        case ('|') -> {
+                            return true;
+                        }
+                        case ('+') -> {
+                            return true;
+                        }
+                        case ('#') -> {
+                            break;
+                        }
+                    }
+                }
+            }
+            case "up": {
+                for (int j = this.j; j < map.get(i).length; j++) {
+                    switch (map.get(i)[j]) {
+                        case ('-') -> {
+                            return true;
+                        }
+                        case ('+') -> {
+                            return true;
+                        }
+                        case ('#') -> {
+                            break;
+                        }
+                    }
+                }
+            }
+            case "down": {
+                for (int j = state.getLocation()[1]; j >= 0; j--) {
+                    switch (map.get(i)[j]) {
+                        case ('-') -> {
+                            return true;
+                        }
+                        case ('+') -> {
+                            return true;
+                        }
+                        case ('#') -> {
+                            break;
+                        }
+                    }
+                }
+            }
+            return false;
         }
         for (State s : states) {
             if (s.getDirection().equals(state.getDirection()) && Arrays.equals(s.getLocation(), state.getLocation())) {
