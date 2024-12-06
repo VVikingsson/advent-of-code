@@ -7,4 +7,12 @@ public class State {
         this.dir = dir;
         this.tuple = new int[]{i, j};
     }
+
+    public String getDirection() {
+        return this.dir;
+    }
+
+    public int[] getLocation() {
+        return this.tuple;
+    }
 }

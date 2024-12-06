@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("inputs/day06.txt");
+        File file = new File("inputs/test.txt");
         Scanner reader = new Scanner(file);
         ArrayList<char[]> contents = new ArrayList<>();
         while (reader.hasNextLine()) {
@@ -41,9 +41,6 @@ class Main {
             }
 
         }
-
-
-
 
         Guard guard = new Guard(guardPosI, guardPosJ, guardDirection, contents);
         int[] result = guard.solve();
