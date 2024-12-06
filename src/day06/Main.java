@@ -46,6 +46,7 @@ class Main {
 
 
         Guard guard = new Guard(guardPosI, guardPosJ, guardDirection, contents);
-        System.out.println(guard.solve());
+        int[] result = guard.solve();
+        System.out.println(result[0] + "   " + result[1]);
     }
 }

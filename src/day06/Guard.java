@@ -1,6 +1,7 @@
 package day06;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 class Guard {
     int i;
@@ -8,6 +9,8 @@ class Guard {
     String dir;
     ArrayList<char[]> map;
     boolean done = false;
+    ArrayList<State> states = new ArrayList<>();
+    int obstructions = 0;
 
     public Guard(int i, int j, String dir, ArrayList<char[]> map) {
         this.i = i;
@@ -18,6 +21,10 @@ class Guard {
 
     public void walk() {
         map.get(i)[j] = 'X';
+        if (states.contains(new State(dir, i, j))) {
+            obstructions ++;
+        }
+        states.add(new State(dir, i, j));
 
         switch (dir) {
             case "up" -> walkUp();
@@ -77,11 +84,11 @@ class Guard {
         }
     }
 
-    public int solve() {
+    public int[] solve() {
         while (!done) {
             walk();
         }
-        return countX();
+        return new int[]{countX(), obstructions};
     }
 
     private int countX() {
@@ -96,4 +103,12 @@ class Guard {
         return count;
     }
 
+    private boolean alreadyHasState(State state) {
+        for (State s : states) {
+            if (s == state) {
+                return true;
+            }
+        }
+        return false;
+    }
 }
