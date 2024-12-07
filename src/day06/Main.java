@@ -7,11 +7,11 @@ import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("inputs/test.txt");
+        File file = new File("inputs/day06.txt");
         Scanner reader = new Scanner(file);
-        ArrayList<char[]> contents = new ArrayList<>();
+        ArrayList<String[]> contents = new ArrayList<>();
         while (reader.hasNextLine()) {
-            contents.add(reader.nextLine().toCharArray());
+            contents.add(reader.nextLine().split(""));
         }
 
         // Identify the guard
@@ -26,15 +26,15 @@ class Main {
 
         for (int i = 0; i < contents.size(); i++) {
             for (int j = 0; j < contents.get(i).length; j++) {
-                if (contents.get(i)[j] != '#' && contents.get(i)[j] != '.') {
+                if (!contents.get(i)[j].contains("#") && !contents.get(i)[j].contains(".")) {
                     guardPosI = i;
                     guardPosJ = j;
                     System.out.println(guardPosI + " HEY " + guardPosJ);
                     switch (contents.get(i)[j]) {
-                        case '^' -> guardDirection = "up";
-                        case 'v' -> guardDirection = "down";
-                        case '<' -> guardDirection = "left";
-                        case '>' -> guardDirection = "right";
+                        case "^" -> guardDirection = "up";
+                        case "v" -> guardDirection = "down";
+                        case "<" -> guardDirection = "left";
+                        case ">" -> guardDirection = "right";
 
                     }
                 }

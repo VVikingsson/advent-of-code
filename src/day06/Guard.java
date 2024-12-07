@@ -8,12 +8,12 @@ class Guard {
     int i;
     int j;
     String dir;
-    ArrayList<char[]> map;
+    ArrayList<String[]> map;
     boolean done = false;
     ArrayList<State> states = new ArrayList<>();
     int obstructions = 0;
 
-    public Guard(int i, int j, String dir, ArrayList<char[]> map) {
+    public Guard(int i, int j, String dir, ArrayList<String[]> map) {
         this.i = i;
         this.j = j;
         this.dir = dir;
@@ -23,9 +23,10 @@ class Guard {
 
 
     public void walk() {
-        if (isTrappable()) {
+        //System.out.println("Current direction: " + dir + " Current location: " + i + " " + j);
+        if (isTrappable(dir, i, j)) {
             obstructions++;
-            System.out.println("Found possible trap by turning " + getTurnedDirection(dir) + " at " + i + " " + j);
+            System.out.println("Found possible trap going " + dir + " turning " + getTurnedDirection(dir) + " at " + (1 +i) + " " + (1+j));
         }
 
         switch (dir) {
@@ -38,79 +39,55 @@ class Guard {
     }
 
     public void walkUp() {
-        char test = map.get(i)[j];
-        if (map.get(i)[j] == '-') {
-            map.get(i)[j] = '+';
-        }
-        else {
-            map.get(i)[j] = '|';
-        }
-        System.out.println("Walk up" + " i" + i + " j" + j + "    was " + test + "    wrote " + map.get(i)[j]);
+        map.get(i)[j] = map.get(i)[j] + "u";
+
         if (i - 1 < 0) {
             done = true;
         }
-        else if (map.get(i-1)[j] == '.' || map.get(i-1)[j] == '+' || map.get(i-1)[j] == '|' || map.get(i-1)[j] == '-') {
-            i = i - 1;
+        else if (map.get(i - 1)[j].contains("#")) {
+            dir = "right";
         }
         else {
-            dir = "right";
+            i --;
         }
     }
     public void walkDown() {
-        char test = map.get(i)[j];
-        if (map.get(i)[j] == '-') {
-            map.get(i)[j] = '+';
-        }
-        else {
-            map.get(i)[j] = '|';
-        }
-        System.out.println("Walk down" + " i" + i + " j" + j + "    was " + test +  "    wrote " + map.get(i)[j]);
+        map.get(i)[j] = map.get(i)[j] + "d";
+
         if (i + 1 >= map.size()) {
             done = true;
         }
-        else if (map.get(i-1)[j] == '.' || map.get(i+1)[j] == '+' || map.get(i+1)[j] == '|' || map.get(i+1)[j] == '-') {
-            i = i + 1;
+        else if (map.get(i+1)[j].contains("#")) {
+            dir = "left";
         }
         else {
-            dir = "left";
+            i ++;
         }
     }
     public void walkLeft() {
-        char test = map.get(i)[j];
-        if (map.get(i)[j] == '|') {
-            map.get(i)[j] = '+';
-        }
-        else {
-            map.get(i)[j] = '-';
-        }
-        System.out.println("Walk Left" + "i" + i + "j" + j + "    was " + test + "    wrote " + map.get(i)[j]);
+        map.get(i)[j] = map.get(i)[j] + 'l';
+
         if (j - 1 < 0) {
             done = true;
         }
-        else if (map.get(i)[j-1] == '.' || map.get(i)[j-1] == '+' || map.get(i)[j-1] == '|' || map.get(i)[j-1] == '-') {
-            j = j - 1;
+        else if (map.get(i)[j-1].contains("#")) {
+            dir = "up";
         }
         else {
-            dir = "up";
+            j--;
         }
     }
     public void walkRight() {
-        char test = map.get(i)[j];
-        if (map.get(i)[j] == '|') {
-            map.get(i)[j] = '+';
-        }
-        else {
-            map.get(i)[j] = '-';
-        }
-        System.out.println("Walk right" + " i" + i + " j" + j + "    was " + test + "  wrote " + map.get(i)[j]);
+        map.get(i)[j] = map.get(i)[j] + 'r';
+
         if (j + 1 >= map.get(i).length) {
             done = true;
         }
-        else if (map.get(i)[j+1] == '.' || map.get(i)[j+1] == '+' || map.get(i)[j+1] == '|' || map.get(i)[j+1] == '-') {
-            j = j + 1;
+        else if (map.get(i)[j+1].contains("#")) {
+            dir = "down";
         }
         else {
-            dir = "down";
+            j ++;
         }
     }
 
@@ -126,17 +103,19 @@ class Guard {
     }
 
     public int[] solve() {
+        map.get(i)[j] = ".";
         while (!done) {
             walk();
         }
-        return new int[]{countX(), obstructions};
+        return new int[]{countVisited(), obstructions};
     }
 
-    private int countX() {
+    private int countVisited() {
         int count = 0;
-        for (char[] arr : map) {
-            for (char c : arr) {
-                if (c == 'X' || c == '+' || c == '-' || c == '|') {
+        for (String[] arr : map) {
+            System.out.println(Arrays.toString(arr));
+            for (String s : arr) {
+                if (s.contains("u") || s.contains("l") || s.contains("r") || s.contains("d") ) {
                     count ++;
                 }
             }
@@ -144,67 +123,61 @@ class Guard {
         return count;
     }
 
-    private boolean isTrappable() {
+    private boolean isTrappable(String dir, int x, int y) {
         switch (dir) {
             case "left": {
-                for (int i = this.i; i >= 0; i--) {
-                    switch (map.get(i)[j]) {
-                        case ('|') -> {
-                            return true;
-                        }
-                        case ('+') -> {
-                            return true;
-                        }
-                        case ('#') -> {
-                            break;
-                        }
+                for (int i = x; i > 0; i--) {
+                    if (map.get(i)[y].contains("u")) {
+                        return true;
+                    }
+                    if (map.get(i-1)[y].contains("#")) {
+                        if (isTrappable("up", i, y)) { return true; }
+                        else { break; }
                     }
                 }
+                break;
             }
             case "right": {
-                for (int i = this.i; i < map.size(); i++) {
-                    switch (map.get(i)[j]) {
-                        case ('|') -> {
+                for (int i = x; i < map.size() - 1; i++) {
+                    if (map.get(i)[y].contains("d")) {
+                        return true;
+                    }
+                    if (map.get(i+1)[y].contains("#")) {
+                        if (isTrappable("down", i, y)) {
                             return true;
                         }
-                        case ('+') -> {
-                            return true;
-                        }
-                        case ('#') -> {
-                            break;
-                        }
+                        else { break; }
                     }
                 }
+                break;
             }
             case "up": {
-                for (int j = this.j; j < map.get(i).length; j++) {
-                    switch (map.get(i)[j]) {
-                        case ('-') -> {
+                for (int j = y; j < map.get(i).length - 1; j++) {
+                    if (map.get(x)[j].contains("r")) {
+                        return true;
+                    }
+                    if (map.get(x)[j].contains("#")) {
+                        if (isTrappable("down", x, j)) {
                             return true;
                         }
-                        case ('+') -> {
-                            return true;
-                        }
-                        case ('#') -> {
-                            break;
-                        }
+                        else { break; }
                     }
                 }
+                break;
             }
             case "down": {
-                for (int j = this.j; j >= 0; j--) {
-                    switch (map.get(i)[j]) {
-                        case ('-') -> {
+                for (int j = y; j > 0; j--) {
+                    if (map.get(x)[j].contains("l")) {
+                        return true;
+                    }
+                    if (map.get(x)[j-1].contains("#")) {
+                        if (isTrappable("up", x, j)) {
                             return true;
                         }
-                        case ('+') -> {
-                            return true;
-                        }
-                        case ('#') -> {
-                            break;
-                        }
+                        else { break; }
                     }
                 }
+                break;
             }
         }
         return false;
