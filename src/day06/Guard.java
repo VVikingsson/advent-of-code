@@ -23,13 +23,10 @@ class Guard {
 
 
     public void walk() {
-        State currentState = new State(dir, i, j);
-        if (isTrappable(currentState)) {
+        if (isTrappable()) {
             obstructions++;
             System.out.println("Found possible trap by turning " + getTurnedDirection(dir) + " at " + i + " " + j);
         }
-
-        map.get(i)[j] = 'X';
 
         switch (dir) {
             case "up" -> walkUp();
@@ -41,13 +38,14 @@ class Guard {
     }
 
     public void walkUp() {
+        char test = map.get(i)[j];
         if (map.get(i)[j] == '-') {
             map.get(i)[j] = '+';
         }
         else {
             map.get(i)[j] = '|';
         }
-        System.out.println("Walk up" + " i" + i + " j" + j + "    wrote " + map.get(i)[j]);
+        System.out.println("Walk up" + " i" + i + " j" + j + "    was " + test + "    wrote " + map.get(i)[j]);
         if (i - 1 < 0) {
             done = true;
         }
@@ -59,13 +57,14 @@ class Guard {
         }
     }
     public void walkDown() {
+        char test = map.get(i)[j];
         if (map.get(i)[j] == '-') {
             map.get(i)[j] = '+';
         }
         else {
             map.get(i)[j] = '|';
         }
-        System.out.println("Walk down" + " i" + i + " j" + j + "    wrote " + map.get(i)[j]);
+        System.out.println("Walk down" + " i" + i + " j" + j + "    was " + test +  "    wrote " + map.get(i)[j]);
         if (i + 1 >= map.size()) {
             done = true;
         }
@@ -77,13 +76,14 @@ class Guard {
         }
     }
     public void walkLeft() {
+        char test = map.get(i)[j];
         if (map.get(i)[j] == '|') {
             map.get(i)[j] = '+';
         }
         else {
             map.get(i)[j] = '-';
         }
-        System.out.println("Walk Left" + "i" + i + "j" + j + "    wrote " + map.get(i)[j]);
+        System.out.println("Walk Left" + "i" + i + "j" + j + "    was " + test + "    wrote " + map.get(i)[j]);
         if (j - 1 < 0) {
             done = true;
         }
@@ -95,13 +95,14 @@ class Guard {
         }
     }
     public void walkRight() {
+        char test = map.get(i)[j];
         if (map.get(i)[j] == '|') {
             map.get(i)[j] = '+';
         }
         else {
             map.get(i)[j] = '-';
         }
-        System.out.println("Walk right" + " i" + i + " j" + j + "    wrote " + map.get(i)[j]);
+        System.out.println("Walk right" + " i" + i + " j" + j + "    was " + test + "  wrote " + map.get(i)[j]);
         if (j + 1 >= map.get(i).length) {
             done = true;
         }
@@ -142,17 +143,8 @@ class Guard {
         }
         return count;
     }
-    private boolean hasState(String dir, int[] location) {
-        for (State s : states) {
-            if (s.getDirection().equals(dir) && Arrays.equals(s.getLocation(), location)) {
-                System.out.println(dir + " " + location[0] + " " + location[1] + "  |  existing state: " + s.getDirection() + " " + s.getLocation()[0] + " " + s.getLocation()[1]);
 
-                return true;
-            }
-        }
-        return false;
-    }
-    private boolean isTrappable(State state) {
+    private boolean isTrappable() {
         switch (dir) {
             case "left": {
                 for (int i = this.i; i >= 0; i--) {
@@ -200,7 +192,7 @@ class Guard {
                 }
             }
             case "down": {
-                for (int j = state.getLocation()[1]; j >= 0; j--) {
+                for (int j = this.j; j >= 0; j--) {
                     switch (map.get(i)[j]) {
                         case ('-') -> {
                             return true;
@@ -213,12 +205,6 @@ class Guard {
                         }
                     }
                 }
-            }
-            return false;
-        }
-        for (State s : states) {
-            if (s.getDirection().equals(state.getDirection()) && Arrays.equals(s.getLocation(), state.getLocation())) {
-                return true;
             }
         }
         return false;
