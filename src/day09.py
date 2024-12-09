@@ -22,7 +22,8 @@ def part1():
         else:
             for j in range(int(disk[i])):
                 files.append(".")
-            dots += int(disk[i])    
+            dots += int(disk[i])   
+
 
     # Move files
     j = 0
@@ -42,14 +43,12 @@ def part1():
 def part2():
     # Format files
     files = []
-    dot_groups = 0
 
     for i in range(len(disk)):
         if i % 2 == 0:
-            files.append(int(disk[i]) * str(i // 2))
+            files.append(int(disk[i]) * [str(i // 2)])
         elif disk[i] != "0":
             files.append(int(disk[i]) * ".")
-            dot_groups += 1 
         
     
     # Move files
@@ -84,11 +83,11 @@ def part2():
 
         i -= 1
 
-    result = ""
-
+    result = []
     for s in files:
         for e in s:
-            result += e
+            result.append(e)
+
 
     return checksum(result)
     
