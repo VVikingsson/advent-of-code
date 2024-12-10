@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 class Main {
     public static void main(String[] args) throws FileNotFoundException {
-        File file = new File("inputs/day06.txt");
+        File file = new File("inputs/test.txt");
         Scanner reader = new Scanner(file);
         ArrayList<String[]> contents = new ArrayList<>();
         while (reader.hasNextLine()) {
@@ -23,13 +23,11 @@ class Main {
 
 
         int checked = 0;
-
         for (int i = 0; i < contents.size(); i++) {
             for (int j = 0; j < contents.get(i).length; j++) {
                 if (!contents.get(i)[j].contains("#") && !contents.get(i)[j].contains(".")) {
                     guardPosI = i;
                     guardPosJ = j;
-                    System.out.println(guardPosI + " HEY " + guardPosJ);
                     switch (contents.get(i)[j]) {
                         case "^" -> guardDirection = "up";
                         case "v" -> guardDirection = "down";
@@ -39,11 +37,15 @@ class Main {
                     }
                 }
             }
-
         }
-
         Guard guard = new Guard(guardPosI, guardPosJ, guardDirection, contents);
-        int[] result = guard.solve();
-        System.out.println(result[0] + "   " + result[1]);
+        try {
+            int[] result = guard.solve();
+            System.out.println(result[0] + "   " + result[1]);
+        }
+        catch (InfinityException e) {
+            System.out.println(e.getMessage());
+            System.out.println("^^^^^^THIS WAS THROWN IN MAIN^^^^^");
+        }
     }
 }

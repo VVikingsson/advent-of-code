@@ -12,6 +12,7 @@ class Guard {
     boolean done = false;
     ArrayList<State> states = new ArrayList<>();
     int obstructions = 0;
+    private boolean isPaused = false;
 
     public Guard(int i, int j, String dir, ArrayList<String[]> map) {
         this.i = i;
@@ -22,23 +23,47 @@ class Guard {
 
 
 
-    public void walk() {
-        //System.out.println("Current direction: " + dir + " Current location: " + i + " " + j);
-        if (isTrappable(dir, i, j)) {
-            obstructions++;
-            System.out.println("Found possible trap going " + dir + " turning " + getTurnedDirection(dir) + " at " + (1 +i) + " " + (1+j));
+    public void walk() throws InfinityException{
+        if (!isPaused) {
+            System.out.println("This happens");
+            isPaused = true;
+            ArrayList<String[]> pausedMap = new ArrayList<>(map);
+            String pausedDir = dir;
+            switch (dir) {
+                case "up" -> map.get(i - 1)[j] = "#";
+                case "down" -> map.get(i + 1)[j] = "#";
+                case "left" -> map.get(i)[j - 1] = "#";
+                case "right" -> map.get(i)[j + 1] = "#";
+            }
+            try {
+                solve();
+            }
+            catch (InfinityException e) {
+                obstructions += 1;
+            }
+            finally {
+            dir = pausedDir;
+            isPaused = false;
+            map = pausedMap;
+            done = false;
+            }
         }
-
+        else {
+            System.out.println("Regular walk!");
+        }
         switch (dir) {
             case "up" -> walkUp();
             case "down" -> walkDown();
             case "left" -> walkLeft();
             case "right" -> walkRight();
-            default -> System.out.println("Error");
+            default -> System.out.println("No direction found");
         }
     }
 
-    public void walkUp() {
+    public void walkUp() throws InfinityException {
+        if (map.get(i)[j].contains("u")) {
+            throw new InfinityException("This was thrown to increment the number of loops");
+        }
         map.get(i)[j] = map.get(i)[j] + "u";
 
         if (i - 1 < 0) {
@@ -51,7 +76,10 @@ class Guard {
             i --;
         }
     }
-    public void walkDown() {
+    public void walkDown() throws InfinityException {
+        if (map.get(i)[j].contains("d")) {
+            throw new InfinityException("This was thrown to increment the number of loops");
+        }
         map.get(i)[j] = map.get(i)[j] + "d";
 
         if (i + 1 >= map.size()) {
@@ -64,7 +92,10 @@ class Guard {
             i ++;
         }
     }
-    public void walkLeft() {
+    public void walkLeft() throws InfinityException {
+        if (map.get(i)[j].contains("l")) {
+            throw new InfinityException("This was thrown to increment the number of loops");
+        }
         map.get(i)[j] = map.get(i)[j] + 'l';
 
         if (j - 1 < 0) {
@@ -77,7 +108,10 @@ class Guard {
             j--;
         }
     }
-    public void walkRight() {
+    public void walkRight() throws InfinityException {
+        if (map.get(i)[j].contains("r")) {
+            throw new InfinityException("This was thrown to increment the number of loops");
+        }
         map.get(i)[j] = map.get(i)[j] + 'r';
 
         if (j + 1 >= map.get(i).length) {
@@ -102,10 +136,13 @@ class Guard {
         return turnedDirection;
     }
 
-    public int[] solve() {
+    public int[] solve() throws InfinityException {
         map.get(i)[j] = ".";
         while (!done) {
             walk();
+        }
+        for (String[] arr : map) {
+            System.out.println(Arrays.toString(arr));
         }
         return new int[]{countVisited(), obstructions};
     }
@@ -113,7 +150,6 @@ class Guard {
     private int countVisited() {
         int count = 0;
         for (String[] arr : map) {
-            System.out.println(Arrays.toString(arr));
             for (String s : arr) {
                 if (s.contains("u") || s.contains("l") || s.contains("r") || s.contains("d") ) {
                     count ++;
@@ -121,65 +157,5 @@ class Guard {
             }
         }
         return count;
-    }
-
-    private boolean isTrappable(String dir, int x, int y) {
-        switch (dir) {
-            case "left": {
-                for (int i = x; i > 0; i--) {
-                    if (map.get(i)[y].contains("u")) {
-                        return true;
-                    }
-                    if (map.get(i-1)[y].contains("#")) {
-                        if (isTrappable("up", i, y)) { return true; }
-                        else { break; }
-                    }
-                }
-                break;
-            }
-            case "right": {
-                for (int i = x; i < map.size() - 1; i++) {
-                    if (map.get(i)[y].contains("d")) {
-                        return true;
-                    }
-                    if (map.get(i+1)[y].contains("#")) {
-                        if (isTrappable("down", i, y)) {
-                            return true;
-                        }
-                        else { break; }
-                    }
-                }
-                break;
-            }
-            case "up": {
-                for (int j = y; j < map.get(i).length - 1; j++) {
-                    if (map.get(x)[j].contains("r")) {
-                        return true;
-                    }
-                    if (map.get(x)[j].contains("#")) {
-                        if (isTrappable("down", x, j)) {
-                            return true;
-                        }
-                        else { break; }
-                    }
-                }
-                break;
-            }
-            case "down": {
-                for (int j = y; j > 0; j--) {
-                    if (map.get(x)[j].contains("l")) {
-                        return true;
-                    }
-                    if (map.get(x)[j-1].contains("#")) {
-                        if (isTrappable("up", x, j)) {
-                            return true;
-                        }
-                        else { break; }
-                    }
-                }
-                break;
-            }
-        }
-        return false;
     }
 }
