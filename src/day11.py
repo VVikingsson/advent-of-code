@@ -12,8 +12,6 @@ print(stones)
 for blink in range(75):
     if blink == 25:
         print(sum(stones.values()))
-    if blink == 6:
-        print(sum(stones.values()))
     new_stones = deepcopy(stones)
     for stone, count in stones.items():
         
