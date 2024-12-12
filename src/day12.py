@@ -18,7 +18,7 @@ def get_sides_no(region, total_perimeter, valued_cells):
 
     # Count down-facing surfaces
     covered = set()
-    print("DOWN_FACING")
+    #print("DOWN_FACING")
     for i in range(downmost, upmost - 1, -1):
         checked = set()
         for cell in region:
@@ -27,7 +27,7 @@ def get_sides_no(region, total_perimeter, valued_cells):
                     if cell not in covered:
                         for c in checked:
                             if c not in covered and abs(cell[1] - c[1]) == 1:
-                                print("Subtracting because cell", c, "is next to", cell)
+                                #print("Subtracting because cell", c, "is next to", cell)
                                 sides -= 1
 
                         checked.add(cell)
@@ -35,7 +35,7 @@ def get_sides_no(region, total_perimeter, valued_cells):
             
     # Count up-facing surfaces
     covered = set()
-    print("UP_FACING")
+    #print("UP_FACING")
     for i in range(upmost, downmost + 1):
         checked = set()
         for cell in region:
@@ -44,7 +44,7 @@ def get_sides_no(region, total_perimeter, valued_cells):
                     if cell not in covered:
                         for c in checked:
                             if c not in covered and abs(cell[1] - c[1]) == 1:
-                                print("Subtracting because cell", c, "is next to", cell)
+                                #print("Subtracting because cell", c, "is next to", cell)
                                 sides -= 1
                     
                         checked.add(cell)
@@ -52,22 +52,23 @@ def get_sides_no(region, total_perimeter, valued_cells):
 
     # Count right-facing surfaces
     covered = set()
-    print("RIGHT_FACING")
+    #print("RIGHT_FACING")
     for j in range(rightmost, leftmost -1, -1):
+        checked = set()
         for cell in region:
             if cell in valued_cells:
                 if cell[1] == j:
                     if cell not in covered:
                         for c in checked:
                             if c not in covered and abs(cell[0] - c[0]) == 1:
-                                print("Subtracting because cell", c, "is next to", cell)
+                                #print("Subtracting because cell", cell, "is next to", c)
                                 sides -= 1
                         checked.add(cell)
             covered.add((cell[0], cell[1] - 1))
 
     # Count left-facing surfaces
     covered = set()
-    print("LEFT_FACING")
+    #print("LEFT_FACING")
     for j in range(leftmost, rightmost + 1):
         checked = set()
         for cell in region:
@@ -76,7 +77,7 @@ def get_sides_no(region, total_perimeter, valued_cells):
                     if cell not in covered:
                         for c in checked:
                             if c not in covered and abs(cell[0] - c[0]) == 1:
-                                print("Subtracting because cell", c, "is next to", cell)
+                                #print("Subtracting because cell", c, "is next to", cell)
                                 sides -= 1
                         checked.add(cell)
             covered.add((cell[0], cell[1] + 1))
@@ -99,7 +100,7 @@ def is_part_of(list, i, j):
     return False
 
 
-with open("inputs/test.txt", "r") as file:
+with open("inputs/day12.txt", "r") as file:
     garden = [line.strip() for line in file.readlines()]
 
 explored = defaultdict(list)
@@ -151,12 +152,11 @@ for letter, regions in explored.items():
             perimeter += value
 
         total += area * perimeter
-        #print(total, "/", 1930)
         sides = get_sides_no(region, perimeter, valued_cells)
         total_discounted += area * sides
         print("letter", letter, area, "*", sides, "=", area*sides)
 
-#print(total)
+print(total)
 print(total_discounted)
 
 
