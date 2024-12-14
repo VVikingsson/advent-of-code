@@ -37,63 +37,39 @@ aoc/
 └── .gitignore
 ```
 
-## 🛠 How to Participate
-
-1. **Copy this repository** (click *"Use this template"* or *fork* the
-   repository)
-2. **Clone the copied repository**
-   ```bash
-   git clone https://github.com/[YOUR-USERNAME]/[CHOSEN-NAME]
-   ```
-3. **Create solutions**
-   - Solve daily challenges in your preferred programming language (e.g.,
-     Python, Java, Rust, etc.)
-   - Create a folder for each day's solution (e.g., `day01`, `day02`, etc.)
-4. **Commit and Push**
-   ```bash
-   git add .          # to add all changes files
-   git add ./src/dayX # to add a specific day
-
-   git commit -m "Add solution for Day X"
-   git push origin main
-   ```
-
 ## 🌟 My Advent of Code Profile
 
-### Personal Information (TODO)
+### Personal Information
 
-- **Programming Language**: [Python/JavaScript/Rust/etc.]
-- **Year**: [Current Year]
-- **Total Stars Collected**: [Total Stars]
-- **Favorite Challenge**: [Day X]
-> To be fille in by the participant...
+- **Programming Language**: Mostly Python, learning Lua and Java!
+- **Year**: 2024
+- **Total Stars Collected**: 26
+- **Favorite Challenge**: 3 and 12!
 
 ## 🔗 Useful Resources
 
 - [Official Advent of Code Website](https://adventofcode.com/)
 - [Advent of Code Reddit Community](https://www.reddit.com/r/adventofcode/)
 
-## 🏆 Tracking Progress (TODO)
-
-Use the checklist below to track your daily challenges:
+## 🏆 Tracking Progress
 
 <details>
 <summary>My progress so far...</summary>
 
-- [ ] Day 1
-- [ ] Day 2
-- [ ] Day 3
-- [ ] Day 4
-- [ ] Day 5
+- [2/2] Day 1
+- [2/2] Day 2
+- [2/2] Day 3
+- [2/2] Day 4
+- [2/2] Day 5
 - [ ] Day 6
-- [ ] Day 7
-- [ ] Day 8
-- [ ] Day 9
-- [ ] Day 10
-- [ ] Day 11
-- [ ] Day 12
-- [ ] Day 13
-- [ ] Day 14
+- [2/2] Day 7
+- [2/2] Day 8
+- [2/2] Day 9
+- [2/2] Day 10
+- [2/2] Day 11
+- [2/2] Day 12
+- [1/2] Day 13
+- [1/2] Day 14
 - [ ] Day 15
 - [ ] Day 16
 - [ ] Day 17
