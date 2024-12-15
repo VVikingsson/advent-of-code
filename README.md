@@ -18,10 +18,6 @@ This repository is part of a structured learning experience to:
 - Explore different approaches to solving computational challenges
 - Build a portfolio of programming projects
 
-> Keep in mind that this is a **template repository** provided by SKIP. Make
-> changes to the repository to personalize it and make it your own. We provide
-> you with a starting point, but the rest is up to you!
-
 ## 📋 Getting Started
 
 ### Repository Structure
@@ -70,7 +66,7 @@ aoc/
 - [x] Day 12 
 - [x] Day 13 (not part 2)
 - [x] Day 14 (not part 2)
-- [ ] Day 15
+- [x] Day 15 (not part 2)
 - [ ] Day 16
 - [ ] Day 17
 - [ ] Day 18
