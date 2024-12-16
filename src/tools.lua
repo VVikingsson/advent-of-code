@@ -21,5 +21,11 @@ function tools.split(str, splitter)
     return result
 end
 
+function tools.contains(list, element)
+    for i, e in pairs(list) do
+        if e == element then return true end
+    end
+    return false
+end
 
 return tools
