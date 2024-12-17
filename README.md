@@ -67,8 +67,8 @@ aoc/
 - [x] Day 13 (not part 2)
 - [x] Day 14 (not part 2)
 - [x] Day 15 (not part 2)
-- [ ] Day 16
-- [ ] Day 17
+- [x] Day 16 (not part 2)
+- [ ] Day 17 A lot to do in school at this point, so I won't be continuing for now.
 - [ ] Day 18
 - [ ] Day 19
 - [ ] Day 20
