@@ -1,5 +1,5 @@
 <div align="center">
-  <h3>Advent of Code 2024</h3>
+  <h3>Advent of Code</h3>
   <img src="aoc-header.png" alt="AoC header picture"/>
 </div>
 
