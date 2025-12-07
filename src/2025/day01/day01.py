@@ -1,6 +1,6 @@
 def read_rotations():
     rotations = []
-    with open("input.txt", "r") as file:
+    with open("src/2025/day01/input.txt", "r") as file:
         for line in file.read().splitlines():
             if line.startswith("L"):
                 rotations.append(- int(line[1:]))
